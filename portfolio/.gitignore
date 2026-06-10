@@ -7,18 +7,10 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-# Dependencies
 node_modules
-
-# Build output — never commit dist
 dist
 dist-ssr
-
-# Local env files
 *.local
-.env
-.env.*
-!.env.example
 
 # Editor directories and files
 .vscode/*
@@ -30,6 +22,3 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-
-# OS
-Thumbs.db

@@ -1,123 +1,197 @@
 import { motion } from 'framer-motion'
 import { stats, aboutText } from '../constants/data'
 
-const About = () => {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2
-      }
-    }
-  }
+const stagger = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.08 } }
+}
+const fadeUp = {
+  hidden: { opacity: 0, y: 15 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }
+}
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 }
-  }
+// Stat card accent colors (non-blue palette for variety)
+const statAccents = [
+  { num: '#7c3aed', bar: 'linear-gradient(90deg,#7c3aed,#a78bfa)', bg: '#faf5ff', border: '#e9d5ff', icon: '🚀' },
+  { num: '#0891b2', bar: 'linear-gradient(90deg,#0891b2,#67e8f9)', bg: '#ecfeff', border: '#a5f3fc', icon: '⚡' },
+  { num: '#d97706', bar: 'linear-gradient(90deg,#d97706,#fcd34d)', bg: '#fffbeb', border: '#fde68a', icon: '🏆' },
+]
 
-  return (
-    <section id="about" className="py-20 md:py-24 px-6 md:px-8 relative bg-white">
-      {/* Tech Background Animations */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div
-          animate={{
-            x: [0, 30, -30, 0],
-            y: [0, -40, 40, 0],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-          className="absolute top-20 left-10 text-4xl opacity-5"
-        >
-          {'< />'}
+const About = () => (
+  <section id="about" className="py-10 md:py-20 px-4 md:px-10 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #ffffff 30%, #eff6ff 60%, #bfdbfe 85%, #2563eb 100%)' }}>
+    {/* Very subtle decorative blobs — not blue background, just faint corner accents */}
+    <div
+      className="absolute -top-24 -right-24 w-80 h-80 rounded-full pointer-events-none"
+      style={{ background: 'radial-gradient(circle, rgba(124,58,237,0.06) 0%, transparent 70%)' }}
+    />
+    <div
+      className="absolute -bottom-16 -left-16 w-64 h-64 rounded-full pointer-events-none"
+      style={{ background: 'radial-gradient(circle, rgba(8,145,178,0.05) 0%, transparent 70%)' }}
+    />
+
+    <div className="max-w-6xl mx-auto">
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.15 }}
+        variants={stagger}
+      >
+        {/* Header */}
+        <motion.div variants={fadeUp} className="mb-10 md:mb-12">
+          <span className="text-xs font-bold tracking-widest text-blue-500 uppercase">Who I Am</span>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display font-bold text-slate-900 mt-1">
+            About{' '}
+            <span style={{
+              background: 'linear-gradient(135deg,#1d4ed8,#7c3aed)',
+              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text'
+            }}>
+              Me
+            </span>
+          </h2>
+          <div className="mt-2 w-12 h-1 rounded-full" style={{ background: 'linear-gradient(90deg,#1d4ed8,#7c3aed)' }} />
         </motion.div>
 
-        <motion.div
-          animate={{
-            x: [0, -40, 40, 0],
-            y: [0, -35, 35, 0],
-          }}
-          transition={{
-            duration: 25,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 1
-          }}
-          className="absolute bottom-20 right-20 text-5xl opacity-5"
-        >
-          {'{ }'}
-        </motion.div>
-      </div>
-      <div className="max-w-7xl mx-auto">
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          variants={containerVariants}
-        >
-          {/* Section Header */}
-          <motion.div variants={itemVariants} className="text-center mb-12 md:mb-16">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold mb-4 md:mb-6 text-slate-900">
-              About <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">Me</span>
-            </h2>
-            <div className="w-20 md:w-24 h-1.5 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 mx-auto rounded-full" />
-          </motion.div>
+        <div className="grid lg:grid-cols-5 gap-8 md:gap-10 items-start">
 
-          <div className="grid lg:grid-cols-2 gap-10 md:gap-12 items-center">
-            {/* Left - Stats */}
-            <motion.div variants={itemVariants} className="space-y-5 md:space-y-6">
-              {stats.map((stat, index) => (
+          {/* ── Left: Stats (2 cols) ── */}
+          <motion.div variants={fadeUp} className="lg:col-span-2 space-y-4">
+            {stats.map((s, i) => {
+              const a = statAccents[i] || statAccents[0]
+              return (
                 <motion.div
-                  key={index}
-                  custom={index}
+                  key={i}
+                  custom={i}
                   variants={{
-                    hidden: { opacity: 0, x: -30 },
-                    visible: (i) => ({
-                      opacity: 1,
-                      x: 0,
-                      transition: {
-                        delay: i * 0.15,
-                        duration: 0.5,
-                        ease: "easeOut"
-                      }
-                    })
+                    hidden: { opacity: 0, scale: 0.88, y: 15 },
+                    visible: (idx) => ({ opacity: 1, scale: 1, y: 0, transition: { delay: idx * 0.05, type: 'spring', stiffness: 350, damping: 22 } })
                   }}
-                  whileHover={{ scale: 1.05, x: 15 }}
-                  className="bg-white/90 border-2 border-indigo-200 rounded-xl p-6 md:p-8 hover:border-indigo-400 transition-all shadow-lg hover:shadow-xl hover:shadow-indigo-200/50"
+                  whileHover={{ x: 5 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+                  className="relative overflow-hidden rounded-2xl p-5 border"
+                  style={{ background: a.bg, borderColor: a.border }}
                 >
-                  <div className="flex items-center gap-4 md:gap-6">
-                    <motion.div 
-                      animate={{ scale: [1, 1.1, 1] }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                      className="text-4xl md:text-5xl lg:text-6xl font-display font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent"
+                  {/* Big decorative number in background */}
+                  <span
+                    className="absolute -right-3 -top-3 text-7xl font-display font-black opacity-[0.06] select-none pointer-events-none"
+                    style={{ color: a.num }}
+                  >
+                    {s.number}
+                  </span>
+
+                  <div className="relative flex items-center gap-4">
+                    {/* Accent icon */}
+                    <div
+                      className="w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0 shadow-sm"
+                      style={{ background: 'white', border: `1.5px solid ${a.border}` }}
                     >
-                      {stat.number}
-                    </motion.div>
-                    <div className="text-lg md:text-xl lg:text-2xl text-slate-900 font-semibold">
-                      {stat.label}
+                      {a.icon}
+                    </div>
+
+                    <div>
+                      {/* The attractive number */}
+                      <div
+                        className="text-2xl md:text-3xl font-display font-black leading-none"
+                        style={{ color: a.num }}
+                      >
+                        {s.number}
+                      </div>
+                      <div className="text-slate-600 text-xs md:text-sm font-semibold mt-0.5 leading-snug">
+                        {s.label}
+                      </div>
                     </div>
                   </div>
-                </motion.div>
-              ))}
-            </motion.div>
 
-            {/* Right - Description */}
-            <motion.div variants={itemVariants}>
-              <div className="bg-white/90 border-2 border-blue-200/60 rounded-2xl p-8 md:p-10 shadow-xl hover:border-accent transition-all hover:shadow-cyan-300/20">
-                <p className="text-base md:text-lg lg:text-xl text-slate-800 leading-relaxed font-medium">
-                  {aboutText}
-                </p>
+                  {/* Bottom accent bar */}
+                  <div className="mt-3 h-0.5 rounded-full" style={{ background: a.bar, opacity: 0.5 }} />
+                </motion.div>
+              )
+            })}
+
+            {/* Tech chips */}
+            <motion.div
+              variants={{
+                hidden: { opacity: 0, scale: 0.88, y: 15 },
+                visible: { opacity: 1, scale: 1, y: 0, transition: { delay: 0.18, type: 'spring', stiffness: 350, damping: 22 } }
+              }}
+              whileHover={{ y: -3, boxShadow: '0 8px 24px rgba(0,0,0,0.04)' }}
+              transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+              className="p-4 rounded-2xl border border-slate-100 bg-slate-50 cursor-default"
+            >
+              <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-3">Tech Stack</p>
+              <div className="flex flex-wrap gap-2">
+                {['Java', 'React', 'Node.js', 'AWS', 'MongoDB', 'MySQL'].map(t => (
+                  <span
+                    key={t}
+                    className="px-2.5 py-1 rounded-full text-xs font-semibold bg-white border border-slate-200 text-slate-700 shadow-sm"
+                  >
+                    {t}
+                  </span>
+                ))}
               </div>
             </motion.div>
-          </div>
-        </motion.div>
-      </div>
-    </section>
-  )
-}
+          </motion.div>
+
+          {/* ── Right: About text (3 cols) ── */}
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, scale: 0.88, y: 15 },
+              visible: { opacity: 1, scale: 1, y: 0, transition: { delay: 0.12, type: 'spring', stiffness: 350, damping: 22 } }
+            }}
+            whileHover={{ y: -6, scale: 1.01, boxShadow: '0 16px 40px rgba(99,102,241,0.12)' }}
+            transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+            className="lg:col-span-3 relative rounded-3xl overflow-hidden p-5 md:p-8 border cursor-default"
+            style={{
+              background: 'linear-gradient(145deg, #ffffff 0%, #eff6ff 50%, #dbeafe 100%)',
+              borderColor: 'rgba(99,102,241,0.15)',
+              boxShadow: '0 8px 40px rgba(99,102,241,0.08), 0 2px 12px rgba(0,0,0,0.04)',
+            }}
+          >
+            {/* Soft blobs inside card */}
+            <div
+              className="absolute top-0 right-0 w-48 h-48 rounded-full pointer-events-none"
+              style={{ background: 'radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%)' }}
+            />
+            <div
+              className="absolute bottom-0 left-0 w-36 h-36 rounded-full pointer-events-none"
+              style={{ background: 'radial-gradient(circle, rgba(14,165,233,0.06) 0%, transparent 70%)' }}
+            />
+
+            <div className="relative">
+              {/* Decorative quote glyph */}
+              <span
+                className="block text-6xl font-serif leading-none mb-2 select-none"
+                style={{ color: 'rgba(99,102,241,0.2)' }}
+              >
+                "
+              </span>
+
+              <p className="text-slate-700 text-sm sm:text-base md:text-lg leading-relaxed font-normal">
+                {aboutText}
+              </p>
+
+              {/* Author row */}
+              <div className="mt-6 pt-4 flex items-center gap-3 border-t border-slate-100">
+                <div
+                  className="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0"
+                  style={{ background: 'linear-gradient(135deg, #4f46e5, #38bdf8)' }}
+                >
+                  JM
+                </div>
+                <div>
+                  <p className="text-slate-800 font-semibold text-sm">Jagadeeswar Mula</p>
+                  <p className="text-slate-400 text-xs">Full Stack Developer · India</p>
+                </div>
+                <div className="ml-auto flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="text-emerald-600 text-xs font-medium">Open to work</span>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </motion.div>
+    </div>
+  </section>
+)
 
 export default About

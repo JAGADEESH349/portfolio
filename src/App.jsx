@@ -26,10 +26,10 @@ function App() {
   return (
     <div className="relative">
       {/* Scroll Progress Bar */}
-      <div className="fixed top-0 left-0 w-full h-1 bg-primary/50 z-50">
-        <div 
-          className="h-full bg-accent transition-all duration-300"
-          style={{ width: `${scrollProgress}%` }}
+      <div className="fixed top-0 left-0 w-full h-1 z-[60]" style={{ background: 'rgba(219,234,254,0.5)' }}>
+        <div
+          className="h-full transition-all duration-150"
+          style={{ width: `${scrollProgress}%`, background: 'linear-gradient(90deg, #1d4ed8, #3b82f6, #60a5fa)' }}
         />
       </div>
 
